@@ -47,6 +47,9 @@ void distribuir_tableau(Pilha *estoque, Pilha tableau[7]);
 
 int mover_para_fundacao(Carta *c, Pilha *fundacao);
 
+int mover_para_tableau(Carta *c, Pilha *coluna);
+
+int mover_tableau_para_tableau(Pilha *origem, Pilha *destino);
 
 void renderizar_jogo(Pilha *estoque, Pilha *descarte, Pilha fundacoes[], Pilha tableau[]);
 

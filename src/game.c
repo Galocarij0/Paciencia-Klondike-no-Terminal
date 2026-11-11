@@ -159,6 +159,56 @@ int mover_para_fundacao(Carta *c, Pilha *fundacao){
     return 0;
 }
 
+int mover_para_tableau(Carta *c, Pilha *coluna){
+    if (c == NULL) return 0;
+
+    if (coluna->topo == NULL){
+        if (c->valor == 13){
+            push_carta(coluna, c);
+            return 1;
+        }
+        return 0;
+    }
+
+    Carta *topo_atual = coluna->topo;
+    if (c->cor != topo_atual->cor && c->valor == topo_atual->valor - 1){
+        push_carta(coluna, c);
+        return 1;
+    }
+    return 0;
+}
+
+int mover_tableau_para_tableau(Pilha *origem, Pilha *destino){
+    if (origem == NULL || origem->topo == NULL) return 0;
+
+    Carta *c = origem->topo;
+
+    if (destino->topo == NULL){
+        if (c->valor == 13){
+            pop_carta(origem);
+            push_carta(destino, c);
+
+            if (origem->topo != NULL && origem->topo->aberta == false){
+                origem->topo->aberta = true;
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    Carta *topo_destino = destino->topo;
+    if (c->cor != topo_destino->cor && c->valor == topo_destino->valor - 1){
+        pop_carta(origem);
+        push_carta(destino, c);
+
+        if (origem->topo != NULL && origem->topo->aberta == false){
+            origem->topo->aberta = true;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 void renderizar_jogo(Pilha *estoque, Pilha *descarte, Pilha fundacoes[], Pilha tableau[]){
     clear();
 
@@ -171,7 +221,7 @@ void renderizar_jogo(Pilha *estoque, Pilha *descarte, Pilha fundacoes[], Pilha t
     move(4, 2);
     clrtoeol();
     if (descarte->topo != NULL){
-        mvprintw(4, 2, "Descarte: Topo -> [%d, Naipe: %d]", descarte->topo->valor, descarte->topo->naipe);
+        mvprintw(4, 2, "Descarte: Topo -> [%d, N: %d]", descarte->topo->valor, descarte->topo->naipe);
     } else {
         mvprintw(4, 2, "Descarte: [ Vazio ]");
     }
@@ -201,6 +251,14 @@ void renderizar_jogo(Pilha *estoque, Pilha *descarte, Pilha fundacoes[], Pilha t
         }
     }
 
-    mvprintw(20, 2, "Pressione 'q' para sair do jogo... :(");
+
+    mvprintw(16, 2, "========================= COMANDOS: =========================");
+    mvprintw(17, 2, " [Espaco] Comprar / Reciclar carta do estoque");
+    mvprintw(18, 2, " [f]      Enviar carta do descarte para Fundacao");
+    mvprintw(19, 2, " [1-7]    Mover carta do descarte para a Coluna (1-7)");
+    mvprintw(20, 2, " [m]      Mover carta entre colunas do Tableau");
+    mvprintw(21, 2, "=============================================================");
+
+    mvprintw(23, 2, "Pressione 'q' para sair do jogo... :(");
     refresh();
 }

@@ -8,6 +8,15 @@
 
 #include "game.h"
 
+int checar_vitoria(Pilha fundacoes[]){
+    for (int i = 0; i < 4; i++){
+        if (fundacoes[i].contagem < 13){
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int main(void){
     srand(time(NULL));
     initscr();
@@ -56,6 +65,57 @@ int main(void){
             }
         }
 
+        if (tecla >= '1' && tecla <= '7'){
+            int coluna_escolhida = tecla - '1';
+
+            if (descarte.topo != NULL){
+                Carta *carta_descarte = descarte.topo;
+                if (mover_para_tableau(carta_descarte, &tableau[coluna_escolhida]) == 1){
+                    pop_carta(&descarte);
+                }
+            }
+        }
+
+        if (tecla == 'm' || tecla == 'M'){
+            mvprintw(22, 2, "[MOVER]: Digite a coluna de ORIGEM (1-7): ");
+            refresh();
+            int tecla_origem = getch();
+
+            if (tecla_origem >= '1' && tecla_origem <= '7'){
+                int origem_idx = tecla_origem - '1';
+
+                mvprintw(22, 2, "[MOVER]: Digite a coluna de DESTINO (1-7): ");
+                refresh();
+                int tecla_destino = getch();
+
+                if (tecla_destino >= '1' && tecla_destino <= '7'){
+                    int destino_idx = tecla_destino - '1';
+                    mover_tableau_para_tableau(&tableau[origem_idx], &tableau[destino_idx]);
+                }
+            }
+            move(22, 2);
+            clrtoeol();
+        }
+
+        if (checar_vitoria(fundacoes)){
+            clear();
+            mvprintw(10, 10, "========================================");
+            mvprintw(11, 10, "   PARABENS! VOCE VENCEU O SOLITAIRE!   ");
+            mvprintw(12, 10, "========================================");
+            mvprintw(14, 10, "Pressione 'q' para sair do jogo... :D");
+            refresh();
+
+            while (1){
+                int fim_tecla = getch();
+                if (fim_tecla == 'q' || fim_tecla == 'Q'){
+                    rodando = 0;
+                    break;
+                }
+            }
+        }
+
+ 
+        
         renderizar_jogo(&estoque, &descarte, fundacoes, tableau);
     }
 
