@@ -18,17 +18,17 @@ typedef enum {
 } Cor;
 
 // Estrutura de uma Carta
-typedef struct {
+typedef struct Carta {
     int valor; // 1 (Ás) a 13 (Rei)
     Naipe naipe; 
     Cor cor; 
     bool aberta; // Aberta/face pra cima (true), virada pra baixo (false)
-    struct Carta* proxima; // Ponteiro para a próxima carta na Pilha
+    struct Carta *proxima; // Ponteiro para a próxima carta na Pilha
 } Carta;
 
 // Estrutura de uma Pilha
 typedef struct {
-    Carta* topo; // Ponteiro para a Carta no Topo da Pilha
+    Carta *topo; // Ponteiro para a Carta no Topo da Pilha
     int contagem; // Quantidade de Cartas na Pilha
 } Pilha;
 
@@ -38,11 +38,21 @@ void push_carta(Pilha* pilha, Carta* carta);
 Carta* pop_carta(Pilha* pilha);
 void liberar_pilha(Pilha* pilha);
 
+void comprar_carta(Pilha *estoque, Pilha *descarte);
+
 void init_deck(Pilha* estoque);
 void embaralhar_deck(Pilha* estoque);
 
+void distribuir_tableau(Pilha *estoque, Pilha tableau[7]);
+
+int mover_para_fundacao(Carta *c, Pilha *fundacao);
+
+
+void renderizar_jogo(Pilha *estoque, Pilha *descarte, Pilha fundacoes[], Pilha tableau[]);
+
+
+
 void init_game(void);
 void free_game(void);
-
 
 #endif
